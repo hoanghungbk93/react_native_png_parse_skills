@@ -8,6 +8,8 @@ description: Use when writing or fixing UI in the NetNam HRApp Expo/React-Native
 ## Overview
 Conventions for the `apps/mobile` Expo Router + React Native app. Match surrounding code; colors come from one theme; ship via OTA.
 
+**REQUIRED BACKGROUND:** This is the project-specific reference. For the general "foundation-first" RN/Expo approach that applies to any/new project, use `building-react-native-app-ui`. This skill only adds NetNam-specific names, tokens, and the OTA setup.
+
 ## Touchables — the #1 gotcha
 `<Pressable style={({pressed}) => ({...})}>` **silently drops layout/visual styles** (flexDirection, padding, backgroundColor, width, borderRadius) on this RN/Expo version. Symptom: icon+text stack vertically, no bg, no padding — looks "collapsed".
 - **Use `TouchableOpacity` + `StyleSheet.create({...})`** for any touchable that needs layout/visual styling.
