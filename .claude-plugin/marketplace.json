@@ -1,0 +1,21 @@
+{
+  "name": "react-native-png-parse-skills",
+  "description": "Skills for translating design images into pixel-accurate React Native / Expo UI code, and building RN app UI foundations.",
+  "owner": {
+    "name": "hoanghungbk93",
+    "email": "hch.bkhn@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "react-native-design-skills",
+      "source": "./plugins/react-native-design-skills",
+      "description": "Analyze design images for exact code (colors/ratios via PIL) + foundation-first RN/Expo UI patterns (theme tokens, shared primitives, list performance).",
+      "version": "1.0.0",
+      "author": {
+        "name": "hoanghungbk93"
+      },
+      "repository": "https://github.com/hoanghungbk93/react_native_png_parse_skills",
+      "keywords": ["react-native", "expo", "design", "skills", "ui", "pixel"]
+    }
+  ]
+}

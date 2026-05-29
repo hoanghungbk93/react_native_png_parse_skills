@@ -1,0 +1,12 @@
+{
+  "name": "react-native-design-skills",
+  "description": "Analyze design images for exact code (colors/ratios via PIL) + foundation-first RN/Expo UI patterns.",
+  "version": "1.0.0",
+  "author": {
+    "name": "hoanghungbk93",
+    "email": "hch.bkhn@gmail.com"
+  },
+  "repository": "https://github.com/hoanghungbk93/react_native_png_parse_skills",
+  "license": "MIT",
+  "keywords": ["react-native", "expo", "design", "ui", "pixel", "skills"]
+}
