@@ -41,9 +41,27 @@ const renderItem = useCallback(({ item }) => <NotifRow item={item} onPress={hand
 ## Architecture
 `app/` = thin routing (one-line re-exports). `src/modules/{domain}/screens`, `src/components/{ui|layout|feedback|list|cards}`, `src/infra/`.
 
+## File upload (FormData) — gotcha
+`api()` in `src/infra/api.ts` auto-sets `Content-Type: application/json` when a body exists — that breaks multipart. It now skips this when `body instanceof FormData` (fixed 28/08); keep that guard if touching `api()`. Upload a file with the RN file-part shape:
+```ts
+const fd = new FormData();
+fd.append("file", { uri: asset.uri, name: asset.fileName ?? "x.jpg", type: asset.mimeType ?? "image/jpeg" } as any);
+api("/uploads", { method: "POST", body: fd });  // returns { url: "/files/<name>" } — relative; render via absoluteUrl()
+```
+Evidence upload reference: `uploadEvidence()` + `EvidenceInput` in `recognize/Step6ReasonPreview.tsx` (expo-image-picker, `quality: 0.7`; server caps 10MB API / 20M nginx).
+
 ## Shipping (OTA)
 - **Always `cd apps/mobile` first** — running `eas update` from repo root targets a stale `hrapp` EAS project instead of `netnam-hr`.
-- `npx eas-cli update --branch production --message "..."` (runtime 0.2.0, Android+iOS). User kills+reopens app to receive.
+- `npx eas-cli update --branch production --message "..."` (Android+iOS). User kills+reopens app to receive.
+- Runtime policy = `appVersion`: an OTA update only reaches installs whose app version matches the publish-time `version` in app.json. Adding any **native module** (e.g. expo-image-picker) can NOT ship via OTA — it needs a new store build.
+
+## Native store builds (when OTA can't ship it)
+1. Bump in `app.json`: `version`, `ios.buildNumber`, `android.versionCode`; add the module's config plugin (with Vietnamese permission strings).
+2. `npx expo prebuild --no-install && npx pod-install ios` — `ios/`+`android/` are gitignored/generated, prebuild is safe.
+3. Android release — **default `java` on this mac is 8 → gradle fails with "requires at least JVM 11"**:
+   `export JAVA_HOME=$(/usr/libexec/java_home -v 18) && cd android && ./gradlew bundleRelease assembleRelease`
+   Artifacts in `android/app/build/outputs/{bundle,apk}/release/` → copy to `build/netnam-hr-v<versionCode>.{aab,apk}`.
+4. iOS: user archives manually — open `ios/NetNamAward.xcworkspace` → Product → Archive → upload (interactive signing; don't script it).
 
 ## Common mistakes
 - Sizing icons in fixed pt instead of a ratio of the container → see `analyzing-designs-for-code`.
