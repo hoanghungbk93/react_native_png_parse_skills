@@ -10,6 +10,9 @@ Repo này vừa là **plugin marketplace** (chứa 2 skill chung), vừa chứa 
 - **`analyzing-designs-for-code`** — phân tích ảnh design/screenshot bằng PIL/numpy để ra code chính xác (đo màu hex, kích thước, **tỉ lệ** thay vì đoán; radial profile cho icon nhiều lớp; xử lý padding trong PNG).
 - **`building-react-native-app-ui`** — (cho **project mới**) dựng nền móng trước: theme tokens + component dùng chung, rồi mới code màn; list performance, gotcha Pressable, kiến trúc, design theo tỉ lệ.
 
+**Backend (KHÔNG nằm trong plugin — chỉ cài tay):**
+- **`race-safe-points-and-money`** — chống race khi code đụng điểm/coin/ví/ledger/voucher/quà 1 lần/duyệt/import (FastAPI + SQLAlchemy async): checklist rà, pattern claim-UPDATE / FOR UPDATE theo thứ tự id / SKIP LOCKED / hash import, và cách CHỨNG MINH test race có ý nghĩa (chạy Postgres thật, nới cửa sổ bằng sleep, tắt lock phải fail).
+
 **Riêng project (KHÔNG nằm trong plugin — chỉ cài tay):**
 - **`netnam-mobile-coding`** — tên component/theme/OTA cụ thể của NetNam HRApp.
 
@@ -32,6 +35,8 @@ mkdir -p ~/.claude/skills
 cp -R plugins/react-native-design-skills/skills/* ~/.claude/skills/
 # skill riêng NetNam (chỉ nếu làm trên repo HRApp):
 cp -R netnam-mobile-coding ~/.claude/skills/
+# skill backend (race điểm/coin):
+cp -R race-safe-points-and-money ~/.claude/skills/
 ```
 
 Mỗi skill là 1 thư mục chứa `SKILL.md` với frontmatter `name` + `description`. Cài tay thì mở **session mới** để Claude nạp.
