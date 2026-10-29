@@ -18,6 +18,14 @@ description: Use when starting or building UI in any React Native / Expo app, es
    - `PaginatedList` (the list wrapper used by every list screen)
 3. **Screens** — compose primitives only. A screen file should contain almost no raw styling.
 
+## Headers stay fixed — NEVER inside the scroll (user has flagged this on many apps)
+The screen header (title, back button, right actions) must stay on screen while content scrolls.
+- Structure every screen as: `<Screen>` → `<Header/>` → `<ScrollView | FlatList>` (siblings). **Never** put the header inside `ScrollView`, and never pass it as `ListHeaderComponent` / `SectionList` header. `ListHeaderComponent` is for in-list content (filters, counts), not the app header.
+- Detail/hero screens: keep only the compact part in the fixed header (title, back, share, one status badge). Long hero info (reasons, meta lines, tags) moves into the first card of the scroll body — don't make a 250pt header fixed, don't let it scroll away either.
+- Sticky bottom action bars follow the same rule: outside the scroll, with `paddingBottom` on the scroll content so the last item is reachable.
+- Guard with a test: give the scroll a `testID` and assert `within(scroll).queryByTestId('header-back')` is null.
+- Sweep after screen work: open every screen whose `<ScrollView` appears **before** its header element in JSX, and every `ListHeaderComponent={...}` that renders a header/back button.
+
 ## Touchables — version gotcha (RN)
 `<Pressable style={({pressed}) => ({...})}>` can **silently drop layout/visual styles** (flexDirection, padding, backgroundColor, width, borderRadius) on some RN/Expo versions. Symptom: children stack vertically, no bg/padding.
 - Use **`TouchableOpacity` + `StyleSheet.create({...})`** for touchables needing layout.
@@ -45,6 +53,7 @@ description: Use when starting or building UI in any React Native / Expo app, es
 - Verify on a real screenshot before claiming done.
 
 ## Common mistakes
+- Header inside `ScrollView` / as `ListHeaderComponent` → scrolls away; keep it a sibling above the scroll.
 - Writing screens before tokens/primitives exist → inconsistent UI, hard to re-skin.
 - Hardcoding colors/sizes instead of tokens/ratios.
 - `.map()` lists, inline callbacks in rows → jank + re-render.

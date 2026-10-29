@@ -22,6 +22,12 @@ Conventions for the `apps/mobile` Expo Router + React Native app. Match surround
 - Prefer `StyleSheet.create` over inline objects (perf + reliability).
 - Beware white-on-white: a `colors.card` (white) card on a white bg needs a border/tint to stay visible.
 
+## Headers stay fixed — NEVER inside the scroll (anh đã nhắc nhiều lần, nhiều app)
+- Layout: `ScreenBackground` → `AppHeader`/`GradientHeader` → `ScrollView`/`FlatList`/`PaginatedList` as **siblings**. Never header inside `ScrollView`, never header in `ListHeaderComponent`.
+- Detail screens: fixed header = title + back + right actions + at most one badge; long hero info goes into the first card of the scroll.
+- Test it: `testID` on the scroll + `expect(within(scroll).queryByTestId('header-back')).toBeNull()`.
+- Same rule in every NetNam/Hana RN app (HRApp, infra app, Hana apps). See building-react-native-app-ui.
+
 ## Shared components (reuse, don't reinvent)
 - `AppHeader` (title/subtitle/showBack/`alignTitle`/right) — category & detail screens use `alignTitle="right"`.
 - `BackButton` — lime circle + white chevron; pass `fallback`.
